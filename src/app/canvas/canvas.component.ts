@@ -21,21 +21,20 @@ export class CanvasComponent implements AfterViewInit {
   @Input() viewPortY = 0;
   @Input() viewPortWidth = 0;
   @Input() viewPortHeight = 0;
-
-  @Input() strokeWidth = 1;
+  @Input() zoom = 1.0;
 
   @Output() canvasWidthChange = new EventEmitter<number>();
   @Output() canvasHeightChange = new EventEmitter<number>();
 
   @Output() resize = new EventEmitter<DOMRect>();
   @Output() viewPortOrigin = new EventEmitter<{ x: number; y: number }>();
+  @Output() zoomChange = new EventEmitter<{ deltaX: number; deltaY: number }>();
 
   @Output() viewPort = new EventEmitter<{
     x: number;
     y: number;
     w: number;
-    h: number | null;
-    force?: boolean;
+    h: number;
   }>();
 
   // canvasWidth
@@ -82,6 +81,7 @@ export class CanvasComponent implements AfterViewInit {
     const scale = Math.pow(1.005, event.deltaY);
     const pt = this.eventToLocation(event);
 
+    this.zoomChange.emit({ deltaX: event.deltaX, deltaY: event.deltaY });
     // this.zoomViewPort(scale, pt);
   }
 
@@ -92,8 +92,8 @@ export class CanvasComponent implements AfterViewInit {
     const pt = this.eventToLocation(event);
 
     this.viewPortOrigin.emit({
-      x: this.viewPortX + event.deltaX,
-      y: this.viewPortY + event.deltaY,
+      x: this.viewPortX + event.deltaX / this.zoom,
+      y: this.viewPortY + event.deltaY / this.zoom,
     });
     // this.zoomViewPort(scale, pt);
   }
@@ -112,10 +112,12 @@ export class CanvasComponent implements AfterViewInit {
     event: MouseEvent | TouchEvent,
     idx = 0
   ): { x: number; y: number } {
+    const strokeWidth = 1.0;
+
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = event instanceof MouseEvent ? event : event.touches[idx];
-    const x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
-    const y = this.viewPortY + (touch.clientY - rect.top) * this.strokeWidth;
+    const x = this.viewPortX + (touch.clientX - rect.left) * strokeWidth;
+    const y = this.viewPortY + (touch.clientY - rect.top) * strokeWidth;
     return { x, y };
   }
 

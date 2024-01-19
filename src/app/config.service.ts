@@ -34,5 +34,7 @@ export class ConfigService {
   @save() viewPortY = 0;
   @save() viewPortWidth = 300;
   @save() viewPortHeight = 200;
+  @save() zoom = 1.0;
+
   constructor() {}
 }

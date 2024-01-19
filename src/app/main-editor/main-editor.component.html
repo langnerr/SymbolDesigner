@@ -6,7 +6,9 @@
     [attr.viewBox]="getViewport()"
     [viewPortX]="cfg.viewPortX"
     [viewPortY]="cfg.viewPortY"
+    [zoom]="cfg.zoom"
     (resize)="onResize($event)"
     (viewPortOrigin)="onViewPortOrigin($event)"
+    (zoomChange)="onZoomChange($event)"
   ></svg>
 </div>
