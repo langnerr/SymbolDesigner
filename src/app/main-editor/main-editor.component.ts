@@ -11,36 +11,29 @@ import { CanvasComponent } from "../canvas/canvas.component";
 })
 export class MainEditorComponent {
   @ViewChild(CanvasComponent) canvas?: CanvasComponent;
-  canvasWidth = 100;
-  canvasHeight = 100;
-  strokeWidth = 1;
+
+  public canvasWidth = 0;
+  public canvasHeight = 0;
 
   constructor(public cfg: ConfigService) {}
 
-  updateViewPort(
-    x: number,
-    y: number,
-    w: number | null,
-    h: number | null,
-    force = false
-  ) {
-    if (!force && this.cfg.viewPortLocked) {
-      return;
-    }
-    if (w === null && h !== null) {
-      w = (this.canvasWidth * h) / this.canvasHeight;
-    }
-    if (h === null && w !== null) {
-      h = (this.canvasHeight * w) / this.canvasWidth;
-    }
-    if (!w || !h) {
-      return;
-    }
+  onViewPortOrigin(pt: { x: number; y: number }) {
+    this.cfg.viewPortX = pt.x;
+    this.cfg.viewPortY = pt.y;
+  }
 
-    this.cfg.viewPortX = parseFloat((1 * x).toPrecision(6));
-    this.cfg.viewPortY = parseFloat((1 * y).toPrecision(6));
-    this.cfg.viewPortWidth = parseFloat((1 * w).toPrecision(4));
-    this.cfg.viewPortHeight = parseFloat((1 * h).toPrecision(4));
-    this.strokeWidth = this.cfg.viewPortWidth / this.canvasWidth;
+  onResize(rect: DOMRect) {
+    // this.cfg.viewPortX = 0;
+    // this.cfg.viewPortY = 0;
+    this.cfg.viewPortWidth = rect.width;
+    this.cfg.viewPortHeight = rect.height;
+
+    this.canvasWidth = rect.width;
+    this.canvasHeight = rect.height;
+  }
+
+  getViewport() {
+    const vp = `${this.cfg.viewPortX} ${this.cfg.viewPortY} ${this.cfg.viewPortWidth} ${this.cfg.viewPortHeight}`;
+    return vp;
   }
 }

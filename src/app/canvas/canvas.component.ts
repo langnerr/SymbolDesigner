@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   Output,
 } from "@angular/core";
@@ -23,11 +24,11 @@ export class CanvasComponent implements AfterViewInit {
 
   @Input() strokeWidth = 1;
 
-  _canvasWidth = 0;
   @Output() canvasWidthChange = new EventEmitter<number>();
-
-  _canvasHeight = 0;
   @Output() canvasHeightChange = new EventEmitter<number>();
+
+  @Output() resize = new EventEmitter<DOMRect>();
+  @Output() viewPortOrigin = new EventEmitter<{ x: number; y: number }>();
 
   @Output() viewPort = new EventEmitter<{
     x: number;
@@ -37,6 +38,8 @@ export class CanvasComponent implements AfterViewInit {
     force?: boolean;
   }>();
 
+  // canvasWidth
+  _canvasWidth = 0;
   get canvasWidth(): number {
     return this._canvasWidth;
   }
@@ -44,6 +47,9 @@ export class CanvasComponent implements AfterViewInit {
     this._canvasWidth = canvasWidth;
     this.canvasWidthChange.emit(this._canvasWidth);
   }
+
+  // canvasHeight
+  _canvasHeight = 0;
   get canvasHeight(): number {
     return this._canvasHeight;
   }
@@ -65,32 +71,41 @@ export class CanvasComponent implements AfterViewInit {
     });
   }
 
-  mousewheel(event: { event: WheelEvent; deltaY: number }) {
-    const scale = Math.pow(1.005, event.deltaY);
-    const pt = this.eventToLocation(event.event);
+  @HostListener("wheel", ["$event"]) onWheel(event: WheelEvent) {
+    event.preventDefault();
+    this.wheel$.next(event);
+  }
 
-    this.zoomViewPort(scale, pt);
+  zooming(event: WheelEvent) {
+    console.log(" zoom >>>", event);
+
+    const scale = Math.pow(1.005, event.deltaY);
+    const pt = this.eventToLocation(event);
+
+    // this.zoomViewPort(scale, pt);
+  }
+
+  panning(event: WheelEvent) {
+    console.log("panning >>>", event);
+
+    const scale = Math.pow(1.005, event.deltaY);
+    const pt = this.eventToLocation(event);
+
+    this.viewPortOrigin.emit({
+      x: this.viewPortX + event.deltaX,
+      y: this.viewPortY + event.deltaY,
+    });
+    // this.zoomViewPort(scale, pt);
   }
 
   ngOnInit(): void {
-    // const cap = (val:number, max:number) => val > max ? max : val < -max ? -max : val;
-    // const throttler = throttleTime(20, undefined, {leading: false, trailing: true});
-    this.wheel$
-      // .pipe( buffer(this.wheel$.pipe(throttler)) )
-      // .pipe( map(ev => ({
-      //     event: ev[0],
-      //     deltaY: ev.reduce((acc, cur) => acc + cap(cur.deltaY, 50), 0)
-      // })))
-
-      .pipe(
-        map((ev) => {
-          return {
-            event: ev,
-            deltaY: 5,
-          };
-        })
-      )
-      .subscribe(this.mousewheel.bind(this));
+    this.wheel$.subscribe((event) => {
+      if (event.metaKey || event.ctrlKey) {
+        this.zooming(event);
+      } else {
+        this.panning(event);
+      }
+    });
   }
 
   eventToLocation(
@@ -120,23 +135,22 @@ export class CanvasComponent implements AfterViewInit {
       this.viewPortY +
       (pt.y - this.viewPortY - scale * (pt.y - this.viewPortY));
 
-    this.viewPort.emit({ x, y, w, h });
+    // this.viewPort.emit({ x, y, w, h });
   }
 
   refreshCanvasSize(emitEmptyCanvas = false) {
     const rect = this.canvas.nativeElement.parentNode.getBoundingClientRect();
-    if (rect.width === 0 && emitEmptyCanvas) {
-      // this.emptyCanvas.emit();
-    }
-    this.canvasWidth = rect.width;
-    this.canvasHeight = rect.height;
 
-    this.viewPort.emit({
-      x: this.viewPortX,
-      y: this.viewPortY,
-      w: this.viewPortWidth,
-      h: null,
-      force: true,
-    });
+    this.resize.emit(rect);
+
+    // this.canvasWidth = rect.width;
+    // this.canvasHeight = rect.height;
+
+    // this.viewPort.emit({
+    //   x: this.viewPortX,
+    //   y: this.viewPortY,
+    //   w: this.viewPortWidth,
+    //   h: null,
+    // });
   }
 }

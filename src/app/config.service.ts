@@ -32,15 +32,7 @@ function save() {
 export class ConfigService {
   @save() viewPortX = 0;
   @save() viewPortY = 0;
-  @save() viewPortWidth = 30;
-  @save() viewPortHeight = 30;
-  @save() viewPortLocked = false;
-  @save() filled = true;
-  @save() preview = false;
-  @save() showTicks = false;
-  @save() minifyOutput = false;
-  @save() snapToGrid = true;
-  @save() tickInterval = 5;
-  @save() decimalPrecision = 3;
+  @save() viewPortWidth = 300;
+  @save() viewPortHeight = 200;
   constructor() {}
 }
