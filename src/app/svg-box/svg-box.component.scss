@@ -1,0 +1,18 @@
+.svg-rect {
+  fill: transparent;
+  stroke: #222;
+  &:hover {
+    fill: transparent;
+    stroke: #e33;
+    stroke-width: 2px;
+  }
+}
+
+.draggable {
+  cursor: move;
+}
+
+.selected {
+  stroke: yellowgreen;
+  stroke-width: 2px;
+}

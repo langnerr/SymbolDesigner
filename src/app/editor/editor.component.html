@@ -1,0 +1,31 @@
+<svg
+  id="svg-canvas"
+  width="600"
+  height="600"
+  class="svg-canvas"
+  (pointerdown)="onCanvasPointerDown($event)"
+  (pointerup)="onCanvasPointerUp($event)"
+  (pointermove)="onCanvasPointerMove($event)"
+>
+  <g
+    *ngFor="let ele of elements()"
+    app-svg-box
+    [ngClass]="{ 'se-shape': true, selected: true }"
+    [id]="ele.id"
+    [x]="ele.x"
+    [y]="ele.y"
+  ></g>
+
+  <text x="100" y="100" class="text">hello</text>
+
+  <!-- <ng-template> -->
+  <text x="100" y="200" class="text">template</text>
+  <!-- </ng-template> -->
+</svg>
+
+<nav>
+  <button>Select</button>
+  <button>Create</button>
+</nav>
+
+<div>{{ name() }}</div>

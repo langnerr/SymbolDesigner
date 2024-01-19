@@ -1,0 +1,18 @@
+.svg-canvas {
+  fill: #929;
+  border: rgb(203, 13, 13) solid 1px;
+}
+
+.rect {
+  fill: yellow;
+}
+
+.text {
+  font-size: 32px;
+  &:hover {
+    fill: #e33;
+    stroke: #e33;
+    stroke-width: 1px;
+    cursor: pointer;
+  }
+}
