@@ -75,22 +75,17 @@ export class CanvasComponent implements AfterViewInit {
     this.wheel$.next(event);
   }
 
-  zooming(event: WheelEvent) {
-    console.log(" zoom >>>", event);
-
-    const scale = Math.pow(1.005, event.deltaY);
+  @HostListener("pointerdown", ["$event"]) onPointerDown(event: PointerEvent) {
     const pt = this.eventToLocation(event);
+    console.log("pointer down", event, pt);
+  }
 
+  zooming(event: WheelEvent) {
     this.zoomChange.emit({ deltaX: event.deltaX, deltaY: event.deltaY });
     // this.zoomViewPort(scale, pt);
   }
 
   panning(event: WheelEvent) {
-    console.log("panning >>>", event);
-
-    const scale = Math.pow(1.005, event.deltaY);
-    const pt = this.eventToLocation(event);
-
     this.viewPortOrigin.emit({
       x: this.viewPortX + event.deltaX / this.zoom,
       y: this.viewPortY + event.deltaY / this.zoom,
@@ -109,15 +104,22 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   eventToLocation(
-    event: MouseEvent | TouchEvent,
+    event: PointerEvent | TouchEvent,
     idx = 0
   ): { x: number; y: number } {
     const strokeWidth = 1.0;
 
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = event instanceof MouseEvent ? event : event.touches[idx];
-    const x = this.viewPortX + (touch.clientX - rect.left) * strokeWidth;
-    const y = this.viewPortY + (touch.clientY - rect.top) * strokeWidth;
+    // let x = this.viewPortX + (touch.clientX - rect.left) * strokeWidth;
+    // let y = this.viewPortY + (touch.clientY - rect.top) * strokeWidth;
+
+    let x = touch.clientX;
+    let y = touch.clientY;
+
+    x = this.viewPortX + x / this.zoom;
+    y = this.viewPortY + y / this.zoom;
+
     return { x, y };
   }
 
