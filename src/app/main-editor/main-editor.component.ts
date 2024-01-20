@@ -1,23 +1,25 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { ConfigService } from "../config.service";
 import { CanvasComponent } from "../canvas/canvas.component";
 import { round } from "../util";
 import * as Actions from "../store/canvas/canvas.actions";
 import * as Selectors from "../store/canvas/canvas.selectors";
-import { AsyncPipe } from "@angular/common";
+import { AsyncPipe, CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-main-editor",
   standalone: true,
-  imports: [AsyncPipe, CanvasComponent],
+  imports: [CommonModule, AsyncPipe, CanvasComponent],
   templateUrl: "./main-editor.component.html",
   styleUrl: "./main-editor.component.scss",
+  schemas: [],
 })
 export class MainEditorComponent {
   @ViewChild(CanvasComponent) canvas?: CanvasComponent;
 
   viewport$ = this.store.select(Selectors.selectViewport);
+  elements$ = this.store.select(Selectors.selectElements);
 
   public canvasWidth = 0;
   public canvasHeight = 0;
@@ -87,5 +89,9 @@ export class MainEditorComponent {
   getViewport() {
     const vp = `${this.cfg.viewPortX} ${this.cfg.viewPortY} ${this.cfg.viewPortWidth} ${this.cfg.viewPortHeight}`;
     return vp;
+  }
+
+  onClick(pt: { x: number; y: number }) {
+    this.store.dispatch(Actions.createRandomLine({ count: 1000 }));
   }
 }

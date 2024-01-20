@@ -1,14 +1,14 @@
-<div class="canvas">
-  <svg
-    app-canvas
-    [attr.width]="canvasWidth"
-    [attr.height]="canvasHeight"
-    [attr.viewBox]="getViewport()"
-    [viewPortX]="cfg.viewPortX"
-    [viewPortY]="cfg.viewPortY"
-    [zoom]="cfg.zoom"
-    (onResize)="onResize($event)"
-    (onPanning)="onPanning($event)"
-    (onZooming)="onZooming($event)"
-  ></svg>
-</div>
+<svg
+  app-canvas
+  [attr.width]="canvasWidth"
+  [attr.height]="canvasHeight"
+  [attr.viewBox]="getViewport()"
+  [viewPortX]="cfg.viewPortX"
+  [viewPortY]="cfg.viewPortY"
+  [zoom]="cfg.zoom"
+  (onResize)="onResize($event)"
+  (onPanning)="onPanning($event)"
+  (onZooming)="onZooming($event)"
+  (onClick)="onClick($event)"
+  [elements]="(elements$ | async) || []"
+></svg>

@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet } from "@angular/router";
 import { EditorComponent } from "./editor/editor.component";
-import { GraphicService } from "./service/graphic.service";
 import { MainEditorComponent } from "./main-editor/main-editor.component";
 
 @Component({

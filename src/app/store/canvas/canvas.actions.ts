@@ -15,4 +15,7 @@ export const panning = createAction(
   props<{ x: number; y: number }>()
 );
 
-export const createRandomLine = createAction("[Canvas] createRandomLine");
+export const createRandomLine = createAction(
+  "[Canvas] createRandomLine",
+  props<{ count: number }>()
+);

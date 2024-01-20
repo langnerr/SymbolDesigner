@@ -2,6 +2,7 @@ import { createReducer, on } from "@ngrx/store";
 import { initialState } from "./canvas.state";
 import * as Actions from "./canvas.actions";
 import { round } from "../../util";
+import { LineElement } from "../../models/element";
 
 export const canvasReducer = createReducer(
   initialState,
@@ -44,7 +45,26 @@ export const canvasReducer = createReducer(
     viewportY: round(y),
   })),
 
-  on(Actions.createRandomLine, (state) => {
-    return { ...state };
+  on(Actions.createRandomLine, (state, { count }) => {
+    const x0 = state.viewportX;
+    const dx = state.viewportWidth - state.viewportX;
+    const y0 = state.viewportY;
+    const dy = state.viewportHeight - state.viewportY;
+
+    let newLines = [];
+    for (let i = 0; i < count; i++) {
+      const x1 = Math.floor(x0 + Math.random() * dx);
+      const y1 = Math.floor(y0 + Math.random() * dy);
+      const x2 = Math.floor(x0 + Math.random() * dx);
+      const y2 = Math.floor(y0 + Math.random() * dy);
+      const line = new LineElement();
+      line.x1 = x1;
+      line.y1 = y1;
+      line.x2 = x2;
+      line.y2 = y2;
+      newLines.push(line);
+    }
+    const ele = state.elements.concat(newLines);
+    return { ...state, elements: ele };
   })
 );

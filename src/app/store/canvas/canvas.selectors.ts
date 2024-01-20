@@ -15,3 +15,8 @@ export const selectViewport = createSelector(selectCanvas, (state) => ({
   height: state.viewportHeight,
   zoom: state.viewportZoom,
 }));
+
+export const selectElements = createSelector(
+  selectCanvas,
+  (state) => state.elements
+);

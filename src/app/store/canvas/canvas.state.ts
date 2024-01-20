@@ -1,3 +1,5 @@
+import { Element, IElement } from "../../models/element";
+
 export interface CanvasState {
   viewportX: number;
   viewportY: number;
@@ -6,7 +8,7 @@ export interface CanvasState {
   viewportZoom: number;
   canvasWidth: number;
   canvasHeight: number;
-  elements: [];
+  elements: IElement[];
 }
 
 export const initialState: CanvasState = {

@@ -5,16 +5,22 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  NO_ERRORS_SCHEMA,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from "@angular/core";
 import { Subject, map } from "rxjs";
+import { IElement, LineElement } from "../models/element";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "[app-canvas]",
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: "./canvas.component.html",
   styleUrl: "./canvas.component.scss",
+  schemas: [],
 })
 export class CanvasComponent implements AfterViewInit {
   @Input() viewPortX = 0;
@@ -23,8 +29,12 @@ export class CanvasComponent implements AfterViewInit {
   @Input() viewPortHeight = 0;
   @Input() zoom = 1.0;
 
+  @Input() elements: IElement[] = [];
+
   @Output() canvasWidthChange = new EventEmitter<number>();
   @Output() canvasHeightChange = new EventEmitter<number>();
+
+  @Output() onClick = new EventEmitter<{ x: number; y: number }>();
 
   @Output() onResize = new EventEmitter<DOMRect>();
   @Output() onPanning = new EventEmitter<{ x: number; y: number }>();
@@ -41,6 +51,10 @@ export class CanvasComponent implements AfterViewInit {
     w: number;
     h: number;
   }>();
+
+  trackByIndex = (idx: number, _: unknown) => idx;
+
+  lines = [{ x1: 4, y1: 3, x2: 60, y2: 70 }];
 
   // canvasWidth
   _canvasWidth = 0;
@@ -83,6 +97,7 @@ export class CanvasComponent implements AfterViewInit {
   @HostListener("pointerdown", ["$event"]) onPointerDown(event: PointerEvent) {
     const pt = this.eventToLocation(event);
     console.log("pointer down", event, pt);
+    this.onClick.emit(pt);
   }
 
   zooming(event: WheelEvent) {
