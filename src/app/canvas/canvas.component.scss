@@ -2,17 +2,18 @@
   background-color: #444;
   user-select: none;
 }
+
+line,
 path {
   stroke: white;
   fill: none;
-}
-
-line {
-  stroke: white;
-  fill: none;
-  &:hover {
-    fill: transparent;
-    stroke: #e33;
-    stroke-width: 2px;
+  &.hovered {
+    stroke: #6a33ee;
   }
 }
+
+// &:hover {
+//   fill: transparent;
+//   stroke: #ee3333c0;
+//   stroke-width: 2px;
+// }

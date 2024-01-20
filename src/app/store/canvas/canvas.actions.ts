@@ -19,3 +19,8 @@ export const createRandomLine = createAction(
   "[Canvas] createRandomLine",
   props<{ count: number }>()
 );
+
+export const setStatus = createAction(
+  "[Canvas] setStatus",
+  props<{ text: string }>()
+);

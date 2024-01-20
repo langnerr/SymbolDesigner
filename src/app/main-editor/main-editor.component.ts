@@ -6,11 +6,12 @@ import { round } from "../util";
 import * as Actions from "../store/canvas/canvas.actions";
 import * as Selectors from "../store/canvas/canvas.selectors";
 import { AsyncPipe, CommonModule } from "@angular/common";
+import { StatusComponent } from "../status/status.component";
 
 @Component({
   selector: "app-main-editor",
   standalone: true,
-  imports: [CommonModule, AsyncPipe, CanvasComponent],
+  imports: [StatusComponent, AsyncPipe, CanvasComponent],
   templateUrl: "./main-editor.component.html",
   styleUrl: "./main-editor.component.scss",
   schemas: [],
@@ -29,6 +30,11 @@ export class MainEditorComponent {
 
     private store: Store
   ) {}
+
+  onPointerMove(pt: { x: number; y: number }) {
+    const status = `${pt.x.toFixed(4)} / ${pt.y.toFixed(4)}`;
+    this.store.dispatch(Actions.setStatus({ text: status }));
+  }
 
   onZooming({
     deltaX,
@@ -91,7 +97,17 @@ export class MainEditorComponent {
     return vp;
   }
 
-  onClick(pt: { x: number; y: number }) {
+  onClick({
+    x,
+    y,
+    ele,
+  }: {
+    x: number;
+    y: number;
+    ele: SVGElement | undefined;
+  }) {
     this.store.dispatch(Actions.createRandomLine({ count: 1000 }));
+
+    console.log(">>", ele);
   }
 }

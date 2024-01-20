@@ -34,7 +34,12 @@ export class CanvasComponent implements AfterViewInit {
   @Output() canvasWidthChange = new EventEmitter<number>();
   @Output() canvasHeightChange = new EventEmitter<number>();
 
-  @Output() onClick = new EventEmitter<{ x: number; y: number }>();
+  @Output() onClick = new EventEmitter<{
+    x: number;
+    y: number;
+    ele: SVGElement | undefined;
+  }>();
+  @Output() onPointerMove = new EventEmitter<{ x: number; y: number }>();
 
   @Output() onResize = new EventEmitter<DOMRect>();
   @Output() onPanning = new EventEmitter<{ x: number; y: number }>();
@@ -54,7 +59,7 @@ export class CanvasComponent implements AfterViewInit {
 
   trackByIndex = (idx: number, _: unknown) => idx;
 
-  lines = [{ x1: 4, y1: 3, x2: 60, y2: 70 }];
+  hoveredId: string = "";
 
   // canvasWidth
   _canvasWidth = 0;
@@ -89,15 +94,20 @@ export class CanvasComponent implements AfterViewInit {
     });
   }
 
-  @HostListener("wheel", ["$event"]) onWheel(event: WheelEvent) {
+  @HostListener("wheel", ["$event"]) _onWheel(event: WheelEvent) {
     event.preventDefault();
     this.wheel$.next(event);
   }
 
-  @HostListener("pointerdown", ["$event"]) onPointerDown(event: PointerEvent) {
+  @HostListener("pointerdown", ["$event"]) _onPointerDown(event: PointerEvent) {
     const pt = this.eventToLocation(event);
     console.log("pointer down", event, pt);
-    this.onClick.emit(pt);
+    this.onClick.emit({ x: pt.x, y: pt.y, ele: event.target as SVGElement });
+  }
+
+  @HostListener("pointermove", ["$event"]) _onPointerMove(event: PointerEvent) {
+    const pt = this.eventToLocation(event);
+    this.onPointerMove.emit(pt);
   }
 
   zooming(event: WheelEvent) {
@@ -137,5 +147,9 @@ export class CanvasComponent implements AfterViewInit {
   refreshCanvasSize() {
     const rect = this.canvas.nativeElement.parentNode.getBoundingClientRect();
     this.onResize.emit(rect);
+  }
+
+  onMouseEnter(a: any) {
+    console.log("mouseenter >>", a);
   }
 }

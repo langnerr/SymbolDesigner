@@ -9,6 +9,7 @@ export interface CanvasState {
   canvasWidth: number;
   canvasHeight: number;
   elements: IElement[];
+  status: string;
 }
 
 export const initialState: CanvasState = {
@@ -20,4 +21,6 @@ export const initialState: CanvasState = {
   canvasWidth: 200,
   canvasHeight: 100,
   elements: [],
+
+  status: "",
 };

@@ -10,5 +10,7 @@
   (onPanning)="onPanning($event)"
   (onZooming)="onZooming($event)"
   (onClick)="onClick($event)"
+  (onPointerMove)="onPointerMove($event)"
   [elements]="(elements$ | async) || []"
 ></svg>
+<app-status></app-status>

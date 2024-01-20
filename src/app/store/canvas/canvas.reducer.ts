@@ -66,5 +66,10 @@ export const canvasReducer = createReducer(
     }
     const ele = state.elements.concat(newLines);
     return { ...state, elements: ele };
-  })
+  }),
+
+  on(Actions.setStatus, (state, { text }) => ({
+    ...state,
+    status: text,
+  }))
 );

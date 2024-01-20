@@ -20,3 +20,8 @@ export const selectElements = createSelector(
   selectCanvas,
   (state) => state.elements
 );
+
+export const selectStatus = createSelector(
+  selectCanvas,
+  (state) => state.status
+);
