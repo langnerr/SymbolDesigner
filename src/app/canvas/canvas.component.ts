@@ -26,9 +26,9 @@ export class CanvasComponent implements AfterViewInit {
   @Output() canvasWidthChange = new EventEmitter<number>();
   @Output() canvasHeightChange = new EventEmitter<number>();
 
-  @Output() resize = new EventEmitter<DOMRect>();
-  @Output() viewPortChange = new EventEmitter<{ x: number; y: number }>();
-  @Output() zoomChange = new EventEmitter<{
+  @Output() onResize = new EventEmitter<DOMRect>();
+  @Output() onPanning = new EventEmitter<{ x: number; y: number }>();
+  @Output() onZooming = new EventEmitter<{
     deltaX: number;
     deltaY: number;
     ptX: number;
@@ -87,7 +87,7 @@ export class CanvasComponent implements AfterViewInit {
 
   zooming(event: WheelEvent) {
     const pt = this.eventToLocation(event);
-    this.zoomChange.emit({
+    this.onZooming.emit({
       deltaX: event.deltaX,
       deltaY: event.deltaY,
       ptX: pt.x,
@@ -96,7 +96,7 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   panning(event: WheelEvent) {
-    this.viewPortChange.emit({
+    this.onPanning.emit({
       x: this.viewPortX + event.deltaX / this.zoom,
       y: this.viewPortY + event.deltaY / this.zoom,
     });
@@ -119,27 +119,8 @@ export class CanvasComponent implements AfterViewInit {
     return { x, y };
   }
 
-  // zoomViewPort(scale: number, pt?: { x: number; y: number }) {
-  //   if (!pt) {
-  //     pt = {
-  //       x: this.viewPortX + 0.5 * this.viewPortWidth,
-  //       y: this.viewPortY + 0.5 * this.viewPortHeight,
-  //     };
-  //   }
-  //   const w = scale * this.viewPortWidth;
-  //   const h = scale * this.viewPortHeight;
-  //   const x =
-  //     this.viewPortX +
-  //     (pt.x - this.viewPortX - scale * (pt.x - this.viewPortX));
-  //   const y =
-  //     this.viewPortY +
-  //     (pt.y - this.viewPortY - scale * (pt.y - this.viewPortY));
-
-  //   // this.viewPort.emit({ x, y, w, h });
-  // }
-
   refreshCanvasSize() {
     const rect = this.canvas.nativeElement.parentNode.getBoundingClientRect();
-    this.resize.emit(rect);
+    this.onResize.emit(rect);
   }
 }

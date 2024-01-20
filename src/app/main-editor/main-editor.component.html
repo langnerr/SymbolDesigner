@@ -7,8 +7,8 @@
     [viewPortX]="cfg.viewPortX"
     [viewPortY]="cfg.viewPortY"
     [zoom]="cfg.zoom"
-    (resize)="onResize($event)"
-    (viewPortChange)="onViewPortChange($event)"
-    (zoomChange)="onZoomChange($event)"
+    (onResize)="onResize($event)"
+    (onPanning)="onPanning($event)"
+    (onZooming)="onZooming($event)"
   ></svg>
 </div>

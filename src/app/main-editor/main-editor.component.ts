@@ -1,24 +1,34 @@
 import { Component, ViewChild } from "@angular/core";
+import { Store } from "@ngrx/store";
 import { ConfigService } from "../config.service";
 import { CanvasComponent } from "../canvas/canvas.component";
 import { round } from "../util";
+import * as Actions from "../store/canvas/canvas.actions";
+import * as Selectors from "../store/canvas/canvas.selectors";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "app-main-editor",
   standalone: true,
-  imports: [CanvasComponent],
+  imports: [AsyncPipe, CanvasComponent],
   templateUrl: "./main-editor.component.html",
   styleUrl: "./main-editor.component.scss",
 })
 export class MainEditorComponent {
   @ViewChild(CanvasComponent) canvas?: CanvasComponent;
 
+  viewport$ = this.store.select(Selectors.selectViewport);
+
   public canvasWidth = 0;
   public canvasHeight = 0;
 
-  constructor(public cfg: ConfigService) {}
+  constructor(
+    public cfg: ConfigService,
 
-  onZoomChange({
+    private store: Store
+  ) {}
+
+  onZooming({
     deltaX,
     deltaY,
     ptX,
@@ -29,6 +39,8 @@ export class MainEditorComponent {
     ptX: number;
     ptY: number;
   }) {
+    this.store.dispatch(Actions.zooming({ deltaY, ptX, ptY }));
+
     const MAX_DELTA = 10;
     let delta = Math.min(Math.abs(deltaY), MAX_DELTA);
     const sign = -Math.sign(deltaY);
@@ -49,12 +61,18 @@ export class MainEditorComponent {
     this.recalcViewPort();
   }
 
-  onViewPortChange(pt: { x: number; y: number }) {
+  public onPanning(pt: { x: number; y: number }) {
+    this.store.dispatch(Actions.panning({ x: pt.x, y: pt.y }));
+
     this.cfg.viewPortX = round(pt.x);
     this.cfg.viewPortY = round(pt.y);
   }
 
   onResize(rect: DOMRect) {
+    this.store.dispatch(
+      Actions.resize({ width: rect.width, height: rect.height })
+    );
+
     this.canvasWidth = rect.width;
     this.canvasHeight = rect.height;
 
