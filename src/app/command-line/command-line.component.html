@@ -1,0 +1,10 @@
+<div class="command-line">
+  <input
+    #cmdInput
+    autofocus
+    type="text"
+    [(ngModel)]="cmd"
+    (keydown.enter)="onEnter($event)"
+    (keydown.escape)="onEscape()"
+  />
+</div>

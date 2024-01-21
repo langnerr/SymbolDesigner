@@ -1,17 +1,32 @@
-import { Component, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
+import {
+  Component,
+  HostListener,
+  NO_ERRORS_SCHEMA,
+  ViewChild,
+} from "@angular/core";
 import { Store } from "@ngrx/store";
 import { ConfigService } from "../config.service";
 import { CanvasComponent } from "../canvas/canvas.component";
 import { round } from "../util";
 import * as Actions from "../store/canvas/canvas.actions";
+import * as GuiActions from "../store/gui/gui.actions";
+
 import * as Selectors from "../store/canvas/canvas.selectors";
+import * as GuiSelectors from "../store/gui/gui.selectors";
 import { AsyncPipe, CommonModule } from "@angular/common";
 import { StatusComponent } from "../status/status.component";
+import { CommandLineComponent } from "../command-line/command-line.component";
 
 @Component({
   selector: "app-main-editor",
   standalone: true,
-  imports: [StatusComponent, AsyncPipe, CanvasComponent],
+  imports: [
+    StatusComponent,
+    CommandLineComponent,
+    CommonModule,
+    AsyncPipe,
+    CanvasComponent,
+  ],
   templateUrl: "./main-editor.component.html",
   styleUrl: "./main-editor.component.scss",
   schemas: [],
@@ -21,6 +36,7 @@ export class MainEditorComponent {
 
   viewport$ = this.store.select(Selectors.selectViewport);
   elements$ = this.store.select(Selectors.selectElements);
+  showCommandLine$ = this.store.select(GuiSelectors.showCommandLine);
 
   public canvasWidth = 0;
   public canvasHeight = 0;
@@ -106,8 +122,20 @@ export class MainEditorComponent {
     y: number;
     ele: SVGElement | undefined;
   }) {
-    this.store.dispatch(Actions.createRandomLine({ count: 1000 }));
-
     console.log(">>", ele);
+  }
+
+  @HostListener("window:keydown", ["$event"])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.ctrlKey || event.metaKey) {
+      switch (event.key) {
+        case "/":
+          console.log("keydown >", event);
+          this.store.dispatch(GuiActions.showCommandLine({ show: true }));
+          return true;
+          break;
+      }
+    }
+    return true;
   }
 }

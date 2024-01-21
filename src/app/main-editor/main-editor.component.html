@@ -14,3 +14,4 @@
   [elements]="(elements$ | async) || []"
 ></svg>
 <app-status></app-status>
+<app-command-line *ngIf="showCommandLine$ | async"></app-command-line>

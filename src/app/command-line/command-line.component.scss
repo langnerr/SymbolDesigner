@@ -1,17 +1,16 @@
-.status {
+.command-line {
   position: absolute;
-  left: 20px;
+  right: 220px;
   bottom: 20px;
 
-  width: 200px;
-  height: 2rem;
+  width: 400px;
   border-color: #666;
   border-width: 1px;
   border-style: solid;
   padding: 3px;
   background-color: #ccc;
 
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  input {
+    width: 100%;
+  }
 }
