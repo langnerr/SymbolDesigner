@@ -57,11 +57,7 @@ export const canvasReducer = createReducer(
       const y1 = Math.floor(y0 + Math.random() * dy);
       const x2 = Math.floor(x0 + Math.random() * dx);
       const y2 = Math.floor(y0 + Math.random() * dy);
-      const line = new LineElement();
-      line.x1 = x1;
-      line.y1 = y1;
-      line.x2 = x2;
-      line.y2 = y2;
+      const line = new LineElement(x1, y1, x2, y2);
       newLines.push(line);
     }
     const ele = state.elements.concat(newLines);
