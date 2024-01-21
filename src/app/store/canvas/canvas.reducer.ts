@@ -64,11 +64,6 @@ export const canvasReducer = createReducer(
     return { ...state, elements: ele };
   }),
 
-  on(Actions.setStatus, (state, { text }) => ({
-    ...state,
-    status: text,
-  })),
-
   on(Actions.setSelectedIds, (state, { ids }) => ({
     ...state,
     selectedIds: ids,

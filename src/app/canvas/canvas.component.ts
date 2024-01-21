@@ -13,6 +13,7 @@ import {
 import { Subject, map } from "rxjs";
 import { IElement, LineElement } from "../models/element";
 import { CommonModule } from "@angular/common";
+import { CanvasEventService } from "../canvas-event.service";
 
 @Component({
   selector: "[app-canvas]",
@@ -39,7 +40,6 @@ export class CanvasComponent implements AfterViewInit {
     y: number;
     ele: SVGElement | undefined;
   }>();
-  @Output() onPointerMove = new EventEmitter<{ x: number; y: number }>();
 
   @Output() onResize = new EventEmitter<DOMRect>();
   @Output() onPanning = new EventEmitter<{ x: number; y: number }>();
@@ -83,7 +83,10 @@ export class CanvasComponent implements AfterViewInit {
 
   wheel$ = new Subject<WheelEvent>();
 
-  constructor(public canvas: ElementRef) {}
+  constructor(
+    public canvas: ElementRef,
+    private canvasMessageService: CanvasEventService
+  ) {}
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -103,11 +106,21 @@ export class CanvasComponent implements AfterViewInit {
     const pt = this.eventToLocation(event);
     console.log("pointer down", event, pt);
     this.onClick.emit({ x: pt.x, y: pt.y, ele: event.target as SVGElement });
+    this.canvasMessageService.handlePointerDown({
+      x: pt.x,
+      y: pt.y,
+      event: event,
+    });
   }
 
   @HostListener("pointermove", ["$event"]) _onPointerMove(event: PointerEvent) {
     const pt = this.eventToLocation(event);
-    this.onPointerMove.emit(pt);
+    // this.onPointerMove.emit(pt);
+    this.canvasMessageService.handlePointerMove({
+      event: event,
+      x: pt.x,
+      y: pt.y,
+    });
   }
 
   zooming(event: WheelEvent) {

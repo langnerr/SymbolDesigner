@@ -29,8 +29,3 @@ export const selectElements = createSelector(selectCanvas, (state) => {
     });
   }
 });
-
-export const selectStatus = createSelector(
-  selectCanvas,
-  (state) => state.status
-);

@@ -16,7 +16,6 @@ export interface CanvasState {
   canvasHeight: number;
   elements: IElement[];
   selectedIds: string[];
-  status: string;
 }
 
 const initElements = [
@@ -39,6 +38,4 @@ export const initialState: CanvasState = {
   canvasHeight: 100,
   elements: initElements,
   selectedIds: [],
-
-  status: "",
 };

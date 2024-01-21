@@ -47,11 +47,6 @@ export class MainEditorComponent {
     private store: Store
   ) {}
 
-  onPointerMove(pt: { x: number; y: number }) {
-    const status = `${pt.x.toFixed(4)} / ${pt.y.toFixed(4)}`;
-    this.store.dispatch(CanvasActions.setStatus({ text: status }));
-  }
-
   onZooming({
     deltaX,
     deltaY,

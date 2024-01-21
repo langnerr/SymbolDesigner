@@ -20,11 +20,6 @@ export const createRandomLine = createAction(
   props<{ count: number }>()
 );
 
-export const setStatus = createAction(
-  "[Canvas] setStatus",
-  props<{ text: string }>()
-);
-
 export const setSelectedIds = createAction(
   "[Canvas] setSelectedIds",
   props<{ ids: string[] }>()
