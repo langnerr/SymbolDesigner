@@ -8,7 +8,10 @@
     [attr.y2]="$any(ele).y2"
     (mouseenter)="hoveredId = ele.id"
     (mouseleave)="hoveredId = ''"
-    [ngClass]="{ hovered: ele.id === hoveredId }"
+    [ngClass]="{
+      hovered: ele.id === hoveredId && !$any(ele).selected,
+      selected: $any(ele).selected
+    }"
   />
   } @else if(ele.type === 'ellipse') {
   <svg:ellipse
@@ -19,7 +22,10 @@
     [attr.ry]="$any(ele).ry"
     (mouseenter)="hoveredId = ele.id"
     (mouseleave)="hoveredId = ''"
-    [ngClass]="{ hovered: ele.id === hoveredId }"
+    [ngClass]="{
+      hovered: ele.id === hoveredId && !$any(ele).selected,
+      selected: $any(ele).selected
+    }"
   />
   } @else if (ele.type == 'path') {
   <svg:path
@@ -27,7 +33,10 @@
     [attr.d]="$any(ele).path"
     (mouseenter)="hoveredId = ele.id"
     (mouseleave)="hoveredId = ''"
-    [ngClass]="{ hovered: ele.id === hoveredId }"
+    [ngClass]="{
+      hovered: ele.id === hoveredId && !$any(ele).selected,
+      selected: $any(ele).selected
+    }"
   />
 
   }

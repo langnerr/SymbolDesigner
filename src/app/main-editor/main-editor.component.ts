@@ -8,7 +8,7 @@ import { Store } from "@ngrx/store";
 import { ConfigService } from "../config.service";
 import { CanvasComponent } from "../canvas/canvas.component";
 import { round } from "../util";
-import * as Actions from "../store/canvas/canvas.actions";
+import * as CanvasActions from "../store/canvas/canvas.actions";
 import * as GuiActions from "../store/gui/gui.actions";
 
 import * as Selectors from "../store/canvas/canvas.selectors";
@@ -49,7 +49,7 @@ export class MainEditorComponent {
 
   onPointerMove(pt: { x: number; y: number }) {
     const status = `${pt.x.toFixed(4)} / ${pt.y.toFixed(4)}`;
-    this.store.dispatch(Actions.setStatus({ text: status }));
+    this.store.dispatch(CanvasActions.setStatus({ text: status }));
   }
 
   onZooming({
@@ -63,7 +63,7 @@ export class MainEditorComponent {
     ptX: number;
     ptY: number;
   }) {
-    this.store.dispatch(Actions.zooming({ deltaY, ptX, ptY }));
+    this.store.dispatch(CanvasActions.zooming({ deltaY, ptX, ptY }));
 
     const MAX_DELTA = 10;
     let delta = Math.min(Math.abs(deltaY), MAX_DELTA);
@@ -86,7 +86,7 @@ export class MainEditorComponent {
   }
 
   public onPanning(pt: { x: number; y: number }) {
-    this.store.dispatch(Actions.panning({ x: pt.x, y: pt.y }));
+    this.store.dispatch(CanvasActions.panning({ x: pt.x, y: pt.y }));
 
     this.cfg.viewPortX = round(pt.x);
     this.cfg.viewPortY = round(pt.y);
@@ -94,7 +94,7 @@ export class MainEditorComponent {
 
   onResize(rect: DOMRect) {
     this.store.dispatch(
-      Actions.resize({ width: rect.width, height: rect.height })
+      CanvasActions.resize({ width: rect.width, height: rect.height })
     );
 
     this.canvasWidth = rect.width;
@@ -122,7 +122,10 @@ export class MainEditorComponent {
     y: number;
     ele: SVGElement | undefined;
   }) {
-    console.log(">>", ele);
+    const id = ele?.id;
+    if (id && id.startsWith("ele.")) {
+      this.store.dispatch(CanvasActions.setSelectedIds({ ids: [id] }));
+    }
   }
 
   @HostListener("window:keydown", ["$event"])
@@ -130,10 +133,8 @@ export class MainEditorComponent {
     if (event.ctrlKey || event.metaKey) {
       switch (event.key) {
         case "/":
-          console.log("keydown >", event);
           this.store.dispatch(GuiActions.showCommandLine({ show: true }));
           return true;
-          break;
       }
     }
     return true;

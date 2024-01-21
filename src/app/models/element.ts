@@ -10,7 +10,7 @@ export interface IElement {
 
 export abstract class Element implements IElement {
   type = "base";
-  id = nanoid();
+  id = `ele.${nanoid()}`;
   x1: number = 0;
   y1: number = 0;
   color = "red";

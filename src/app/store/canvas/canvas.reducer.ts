@@ -67,5 +67,10 @@ export const canvasReducer = createReducer(
   on(Actions.setStatus, (state, { text }) => ({
     ...state,
     status: text,
+  })),
+
+  on(Actions.setSelectedIds, (state, { ids }) => ({
+    ...state,
+    selectedIds: ids,
   }))
 );

@@ -16,10 +16,19 @@ export const selectViewport = createSelector(selectCanvas, (state) => ({
   zoom: state.viewportZoom,
 }));
 
-export const selectElements = createSelector(
-  selectCanvas,
-  (state) => state.elements
-);
+export const selectElements = createSelector(selectCanvas, (state) => {
+  if (state.selectedIds.length === 0) {
+    return state.elements;
+  } else {
+    return state.elements.map((ele) => {
+      if (state.selectedIds.includes(ele.id)) {
+        return { ...ele, selected: true };
+      } else {
+        return ele;
+      }
+    });
+  }
+});
 
 export const selectStatus = createSelector(
   selectCanvas,
