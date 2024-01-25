@@ -7,6 +7,10 @@ import { LineElement } from "../../models/element";
 export const canvasReducer = createReducer(
   initialState,
 
+  on(Actions.setTool, (state, { tool }) => {
+    return { ...state, currentToolName: tool };
+  }),
+
   on(Actions.zooming, (state, { deltaY, ptX, ptY }) => {
     const MAX_DELTA = 10;
     let delta = Math.min(Math.abs(deltaY), MAX_DELTA);

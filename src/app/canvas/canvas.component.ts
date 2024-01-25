@@ -35,12 +35,6 @@ export class CanvasComponent implements AfterViewInit {
   @Output() canvasWidthChange = new EventEmitter<number>();
   @Output() canvasHeightChange = new EventEmitter<number>();
 
-  @Output() onClick = new EventEmitter<{
-    x: number;
-    y: number;
-    ele: SVGElement | undefined;
-  }>();
-
   @Output() onResize = new EventEmitter<DOMRect>();
   @Output() onPanning = new EventEmitter<{ x: number; y: number }>();
   @Output() onZooming = new EventEmitter<{
@@ -104,8 +98,7 @@ export class CanvasComponent implements AfterViewInit {
 
   @HostListener("pointerdown", ["$event"]) _onPointerDown(event: PointerEvent) {
     const pt = this.eventToLocation(event);
-    console.log("pointer down", event, pt);
-    this.onClick.emit({ x: pt.x, y: pt.y, ele: event.target as SVGElement });
+    // this.onClick.emit({ x: pt.x, y: pt.y, ele: event.target as SVGElement });
     this.canvasMessageService.handlePointerDown({
       x: pt.x,
       y: pt.y,

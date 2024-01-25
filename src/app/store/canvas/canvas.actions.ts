@@ -24,3 +24,8 @@ export const setSelectedIds = createAction(
   "[Canvas] setSelectedIds",
   props<{ ids: string[] }>()
 );
+
+export const setTool = createAction(
+  "[Canvas] setTool",
+  props<{ tool: string }>()
+);

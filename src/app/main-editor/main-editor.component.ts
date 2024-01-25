@@ -1,9 +1,4 @@
-import {
-  Component,
-  HostListener,
-  NO_ERRORS_SCHEMA,
-  ViewChild,
-} from "@angular/core";
+import { Component, HostListener, ViewChild } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { ConfigService } from "../config.service";
 import { CanvasComponent } from "../canvas/canvas.component";
@@ -16,6 +11,9 @@ import * as GuiSelectors from "../store/gui/gui.selectors";
 import { AsyncPipe, CommonModule } from "@angular/common";
 import { StatusComponent } from "../status/status.component";
 import { CommandLineComponent } from "../command-line/command-line.component";
+import { SelectControlValueAccessor } from "@angular/forms";
+import { SelectToolComponent } from "../tools/select-tool.component";
+import { ToolService } from "../tool.service";
 
 @Component({
   selector: "app-main-editor",
@@ -26,6 +24,7 @@ import { CommandLineComponent } from "../command-line/command-line.component";
     CommonModule,
     AsyncPipe,
     CanvasComponent,
+    SelectToolComponent,
   ],
   templateUrl: "./main-editor.component.html",
   styleUrl: "./main-editor.component.scss",
@@ -41,11 +40,21 @@ export class MainEditorComponent {
   public canvasWidth = 0;
   public canvasHeight = 0;
 
+  public currentToolName = "select";
+
   constructor(
     public cfg: ConfigService,
+    private store: Store,
+    private toolService: ToolService
+  ) {
+    this.store.select(Selectors.currentToolName).subscribe((name) => {
+      this.currentToolName = name;
+    });
+  }
 
-    private store: Store
-  ) {}
+  get currentTool() {
+    return this.toolService.get(this.currentToolName);
+  }
 
   onZooming({
     deltaX,
@@ -106,21 +115,6 @@ export class MainEditorComponent {
   getViewport() {
     const vp = `${this.cfg.viewPortX} ${this.cfg.viewPortY} ${this.cfg.viewPortWidth} ${this.cfg.viewPortHeight}`;
     return vp;
-  }
-
-  onClick({
-    x,
-    y,
-    ele,
-  }: {
-    x: number;
-    y: number;
-    ele: SVGElement | undefined;
-  }) {
-    const id = ele?.id;
-    if (id && id.startsWith("ele.")) {
-      this.store.dispatch(CanvasActions.setSelectedIds({ ids: [id] }));
-    }
   }
 
   @HostListener("window:keydown", ["$event"])

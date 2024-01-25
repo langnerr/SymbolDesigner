@@ -3,6 +3,11 @@ import { CanvasState } from "./canvas.state";
 
 export const selectCanvas = createFeatureSelector<CanvasState>("canvas");
 
+export const currentToolName = createSelector(
+  selectCanvas,
+  (state) => state.currentToolName
+);
+
 export const selectSize = createSelector(selectCanvas, (state) => ({
   width: state.canvasWidth,
   height: state.canvasHeight,

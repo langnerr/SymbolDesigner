@@ -7,6 +7,7 @@ import {
 } from "../../models/element";
 
 export interface CanvasState {
+  currentToolName: string;
   viewportX: number;
   viewportY: number;
   viewportWidth: number;
@@ -29,6 +30,7 @@ const initElements = [
 ];
 
 export const initialState: CanvasState = {
+  currentToolName: "select",
   viewportX: 0,
   viewportY: 0,
   viewportWidth: 200,

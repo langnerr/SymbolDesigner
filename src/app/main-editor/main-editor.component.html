@@ -9,8 +9,8 @@
   (onResize)="onResize($event)"
   (onPanning)="onPanning($event)"
   (onZooming)="onZooming($event)"
-  (onClick)="onClick($event)"
   [elements]="(elements$ | async) || []"
 ></svg>
 <app-status></app-status>
 <app-command-line *ngIf="showCommandLine$ | async"></app-command-line>
+<ng-container *ngComponentOutlet="currentTool.component"></ng-container>
