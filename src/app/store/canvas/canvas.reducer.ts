@@ -30,8 +30,8 @@ export const canvasReducer = createReducer(
       viewportZoom: round(newZoom),
       viewportX: round(newX),
       viewportY: round(newY),
-      viewportWidth: round(state.viewportWidth / newZoom),
-      viewportHeight: round(state.viewportHeight / newZoom),
+      viewportWidth: round(state.canvasWidth / newZoom),
+      viewportHeight: round(state.canvasHeight / newZoom),
     };
   }),
 
@@ -43,10 +43,10 @@ export const canvasReducer = createReducer(
     viewportHeight: round(height / state.viewportZoom),
   })),
 
-  on(Actions.panning, (state, { x, y }) => ({
+  on(Actions.panning, (state, { deltaX, deltaY }) => ({
     ...state,
-    viewportX: round(x),
-    viewportY: round(y),
+    viewportX: round(state.viewportX + deltaX / state.viewportZoom),
+    viewportY: round(state.viewportY + deltaY / state.viewportZoom),
   })),
 
   on(Actions.createRandomLine, (state, { count }) => {

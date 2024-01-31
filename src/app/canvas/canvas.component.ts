@@ -36,20 +36,6 @@ export class CanvasComponent implements AfterViewInit {
   @Output() canvasHeightChange = new EventEmitter<number>();
 
   @Output() onResize = new EventEmitter<DOMRect>();
-  @Output() onPanning = new EventEmitter<{ x: number; y: number }>();
-  @Output() onZooming = new EventEmitter<{
-    deltaX: number;
-    deltaY: number;
-    ptX: number;
-    ptY: number;
-  }>();
-
-  @Output() viewPort = new EventEmitter<{
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  }>();
 
   trackByIndex = (idx: number, _: unknown) => idx;
 
@@ -93,12 +79,16 @@ export class CanvasComponent implements AfterViewInit {
 
   @HostListener("wheel", ["$event"]) _onWheel(event: WheelEvent) {
     event.preventDefault();
-    this.wheel$.next(event);
+    const pt = this.eventToLocation(event);
+    this.canvasMessageService.handleWheel({
+      x: pt.x,
+      y: pt.y,
+      event: event,
+    });
   }
 
   @HostListener("pointerdown", ["$event"]) _onPointerDown(event: PointerEvent) {
     const pt = this.eventToLocation(event);
-    // this.onClick.emit({ x: pt.x, y: pt.y, ele: event.target as SVGElement });
     this.canvasMessageService.handlePointerDown({
       x: pt.x,
       y: pt.y,
@@ -108,38 +98,10 @@ export class CanvasComponent implements AfterViewInit {
 
   @HostListener("pointermove", ["$event"]) _onPointerMove(event: PointerEvent) {
     const pt = this.eventToLocation(event);
-    // this.onPointerMove.emit(pt);
     this.canvasMessageService.handlePointerMove({
       event: event,
       x: pt.x,
       y: pt.y,
-    });
-  }
-
-  zooming(event: WheelEvent) {
-    const pt = this.eventToLocation(event);
-    this.onZooming.emit({
-      deltaX: event.deltaX,
-      deltaY: event.deltaY,
-      ptX: pt.x,
-      ptY: pt.y,
-    });
-  }
-
-  panning(event: WheelEvent) {
-    this.onPanning.emit({
-      x: this.viewPortX + event.deltaX / this.zoom,
-      y: this.viewPortY + event.deltaY / this.zoom,
-    });
-  }
-
-  ngOnInit(): void {
-    this.wheel$.subscribe((event) => {
-      if (event.metaKey || event.ctrlKey) {
-        this.zooming(event);
-      } else {
-        this.panning(event);
-      }
     });
   }
 
@@ -152,6 +114,7 @@ export class CanvasComponent implements AfterViewInit {
 
   refreshCanvasSize() {
     const rect = this.canvas.nativeElement.parentNode.getBoundingClientRect();
+
     this.onResize.emit(rect);
   }
 

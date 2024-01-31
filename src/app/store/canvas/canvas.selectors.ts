@@ -8,6 +8,30 @@ export const currentToolName = createSelector(
   (state) => state.currentToolName
 );
 
+export const canvasHeight = createSelector(
+  selectCanvas,
+  (state) => state.canvasHeight
+);
+
+export const canvasWidth = createSelector(
+  selectCanvas,
+  (state) => state.canvasWidth
+);
+
+export const viewPortX = createSelector(
+  selectCanvas,
+  (state) => state.viewportX
+);
+
+export const viewPortY = createSelector(
+  selectCanvas,
+  (state) => state.viewportY
+);
+export const viewPortZoom = createSelector(
+  selectCanvas,
+  (state) => state.viewportZoom
+);
+
 export const selectSize = createSelector(selectCanvas, (state) => ({
   width: state.canvasWidth,
   height: state.canvasHeight,

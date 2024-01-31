@@ -9,3 +9,6 @@ zoom < 1 => zoomed out
 
 svg documentation
 https://www.mediaevent.de/tutorial/svg-circle-arc.html
+
+dynamic components in angular
+https://angular.io/guide/dynamic-component-loader

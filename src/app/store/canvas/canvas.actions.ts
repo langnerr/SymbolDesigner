@@ -12,7 +12,7 @@ export const resize = createAction(
 
 export const panning = createAction(
   "[Canvas] panning",
-  props<{ x: number; y: number }>()
+  props<{ deltaX: number; deltaY: number }>()
 );
 
 export const createRandomLine = createAction(
