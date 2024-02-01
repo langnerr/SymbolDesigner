@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subject, takeUntil } from "rxjs";
 import { CanvasEventService } from "../canvas-event.service";
+import { BaseTool } from "./base-tool";
 
 @Component({
   selector: "app-create-tool",
@@ -8,14 +9,11 @@ import { CanvasEventService } from "../canvas-event.service";
   imports: [],
   template: "",
 })
-export class CreateToolComponent implements OnInit, OnDestroy {
-  destroy$ = new Subject<void>();
-
-  constructor(private canvasEventService: CanvasEventService) {}
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+export class CreateTool extends BaseTool {
+  constructor(private canvasEventService: CanvasEventService) {
+    super();
   }
+
   ngOnInit(): void {
     this.canvasEventService.pointerDown$
       .pipe(takeUntil(this.destroy$))

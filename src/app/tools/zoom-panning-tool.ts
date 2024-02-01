@@ -5,6 +5,7 @@ import { round } from "../util";
 import { Store } from "@ngrx/store";
 import * as CanvasSelectors from "../store/canvas/canvas.selectors";
 import * as CanvasActions from "../store/canvas/canvas.actions";
+import { BaseTool } from "./base-tool";
 
 @Component({
   selector: "app-zoompanning-tool",
@@ -12,17 +13,14 @@ import * as CanvasActions from "../store/canvas/canvas.actions";
   imports: [],
   template: "",
 })
-export class ZoomPanningToolComponent implements OnInit, OnDestroy {
-  destroy$ = new Subject<void>();
-
+export class ZoomPanningTool extends BaseTool implements OnInit {
   constructor(
     private canvasEventService: CanvasEventService,
     private store: Store
-  ) {}
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  ) {
+    super();
   }
+
   ngOnInit(): void {
     this.canvasEventService.wheel$
       .pipe(takeUntil(this.destroy$))
@@ -43,8 +41,6 @@ export class ZoomPanningToolComponent implements OnInit, OnDestroy {
             })
           );
         }
-
-        console.log("createTool pointerDown", ev);
       });
   }
 }

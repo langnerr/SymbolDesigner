@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CanvasEventService } from "../canvas-event.service";
-import { Subject, takeUntil } from "rxjs";
+import { takeUntil } from "rxjs";
 import { Store } from "@ngrx/store";
 import * as CanvasActions from "../store/canvas/canvas.actions";
+import { BaseTool } from "./base-tool";
 
 @Component({
   selector: "app-select-tool",
@@ -10,18 +11,14 @@ import * as CanvasActions from "../store/canvas/canvas.actions";
   imports: [],
   template: "",
 })
-export class SelectToolComponent implements OnInit, OnDestroy {
-  destroy$ = new Subject<void>();
-
+export class SelectTool extends BaseTool implements OnInit {
   constructor(
     private canvasEventService: CanvasEventService,
     private store: Store
-  ) {}
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  ) {
+    super();
   }
+
   ngOnInit(): void {
     this.canvasEventService.pointerDown$
       .pipe(takeUntil(this.destroy$))
@@ -32,6 +29,8 @@ export class SelectToolComponent implements OnInit, OnDestroy {
 
         if (id && id.startsWith("ele.")) {
           this.store.dispatch(CanvasActions.setSelectedIds({ ids: [id] }));
+        } else {
+          this.store.dispatch(CanvasActions.setSelectedIds({ ids: [] }));
         }
       });
   }

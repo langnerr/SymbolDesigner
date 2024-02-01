@@ -1,8 +1,6 @@
 import { Component, HostListener, ViewChild } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { ConfigService } from "../config.service";
 import { CanvasComponent } from "../canvas/canvas.component";
-import { round } from "../util";
 import * as CanvasActions from "../store/canvas/canvas.actions";
 import * as GuiActions from "../store/gui/gui.actions";
 
@@ -11,10 +9,8 @@ import * as GuiSelectors from "../store/gui/gui.selectors";
 import { AsyncPipe, CommonModule } from "@angular/common";
 import { StatusComponent } from "../status/status.component";
 import { CommandLineComponent } from "../command-line/command-line.component";
-import { SelectControlValueAccessor } from "@angular/forms";
-import { SelectToolComponent } from "../tools/select-tool.component";
 import { ToolService } from "../tool.service";
-import { ZoomPanningToolComponent } from "../tools/zoom-panning-tool.component";
+import { ZoomPanningTool } from "../tools/zoom-panning-tool";
 import { map } from "rxjs";
 
 @Component({
@@ -26,8 +22,7 @@ import { map } from "rxjs";
     CommonModule,
     AsyncPipe,
     CanvasComponent,
-    SelectToolComponent,
-    ZoomPanningToolComponent,
+    ZoomPanningTool,
   ],
   templateUrl: "./main-editor.component.html",
   styleUrl: "./main-editor.component.scss",

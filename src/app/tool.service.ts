@@ -1,7 +1,7 @@
 import { Component, Injectable } from "@angular/core";
 import { CanvasEventService } from "./canvas-event.service";
-import { SelectToolComponent } from "./tools/select-tool.component";
-import { CreateToolComponent } from "./tools/create-tool.component";
+import { SelectTool } from "./tools/select-tool";
+import { CreateTool } from "./tools/create-tool";
 
 @Injectable({
   providedIn: "root",
@@ -9,10 +9,10 @@ import { CreateToolComponent } from "./tools/create-tool.component";
 export class ToolService {
   tools: Record<string, { component: any }> = {
     select: {
-      component: SelectToolComponent,
+      component: SelectTool,
     },
     create: {
-      component: CreateToolComponent,
+      component: CreateTool,
     },
   };
 
