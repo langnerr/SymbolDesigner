@@ -14,6 +14,7 @@ import { Subject, map } from "rxjs";
 import { IElement, LineElement } from "../models/element";
 import { CommonModule } from "@angular/common";
 import { CanvasEventService } from "../canvas-event.service";
+import { Point } from "../point";
 
 @Component({
   selector: "[app-canvas]",
@@ -31,6 +32,7 @@ export class CanvasComponent implements AfterViewInit {
   @Input() zoom = 1.0;
 
   @Input() elements: IElement[] = [];
+  @Input() dynamicElements: Record<string, IElement> = {};
 
   @Output() canvasWidthChange = new EventEmitter<number>();
   @Output() canvasHeightChange = new EventEmitter<number>();
@@ -81,8 +83,7 @@ export class CanvasComponent implements AfterViewInit {
     event.preventDefault();
     const pt = this.eventToLocation(event);
     this.canvasMessageService.handleWheel({
-      x: pt.x,
-      y: pt.y,
+      pt: pt,
       event: event,
     });
   }
@@ -90,8 +91,15 @@ export class CanvasComponent implements AfterViewInit {
   @HostListener("pointerdown", ["$event"]) _onPointerDown(event: PointerEvent) {
     const pt = this.eventToLocation(event);
     this.canvasMessageService.handlePointerDown({
-      x: pt.x,
-      y: pt.y,
+      pt: pt,
+      event: event,
+    });
+  }
+
+  @HostListener("pointerup", ["$event"]) _onPointerUp(event: PointerEvent) {
+    const pt = this.eventToLocation(event);
+    this.canvasMessageService.handlePointerUp({
+      pt: pt,
       event: event,
     });
   }
@@ -100,12 +108,11 @@ export class CanvasComponent implements AfterViewInit {
     const pt = this.eventToLocation(event);
     this.canvasMessageService.handlePointerMove({
       event: event,
-      x: pt.x,
-      y: pt.y,
+      pt: pt,
     });
   }
 
-  eventToLocation(event: PointerEvent | WheelEvent | TouchEvent) {
+  eventToLocation(event: PointerEvent | WheelEvent | TouchEvent): Point {
     const touch = event instanceof MouseEvent ? event : event.touches[0];
     const x = this.viewPortX + touch.clientX / this.zoom;
     const y = this.viewPortY + touch.clientY / this.zoom;
@@ -120,5 +127,9 @@ export class CanvasComponent implements AfterViewInit {
 
   onMouseEnter(a: any) {
     console.log("mouseenter >>", a);
+  }
+
+  getDynamicElements() {
+    return Object.values(this.dynamicElements);
   }
 }

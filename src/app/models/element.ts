@@ -21,6 +21,18 @@ export abstract class Element implements IElement {
   }
 }
 
+export class SelectionBox extends Element {
+  override type = "selectionBox";
+  w: number = 50;
+  h: number = 50;
+
+  constructor(x1: number, y1: number, width: number, height: number) {
+    super(x1, y1);
+    this.w = width;
+    this.h = height;
+  }
+}
+
 export class LineElement extends Element {
   override type = "line";
   x2: number = 50;
@@ -32,7 +44,6 @@ export class LineElement extends Element {
     this.y2 = y2;
   }
 }
-
 export class EllipseElement extends Element {
   override type = "ellipse";
   rx: number = 50;

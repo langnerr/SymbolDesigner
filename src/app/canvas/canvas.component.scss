@@ -1,12 +1,12 @@
 :host {
-  background-color: #444;
+  background-color: #eee;
   user-select: none;
 }
 
 line,
 ellipse,
 path {
-  stroke: white;
+  stroke: #111;
   fill: none;
   &.hovered {
     stroke: #6a33ee;
@@ -16,6 +16,13 @@ path {
 .selected {
   stroke: #ff11ff;
 }
+
+.selection-box {
+  fill: #6a33ee33;
+  stroke: #6a33ee;
+  stroke-width: 0.1px;
+}
+
 // &:hover {
 //   fill: transparent;
 //   stroke: #ee3333c0;

@@ -1,15 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-
-export type CanvasPointerEvent = {
-  x: number;
-  y: number;
-  event: PointerEvent;
-};
+import { Point } from "./point";
 
 export type CanvasEvent<T> = {
-  x: number;
-  y: number;
+  pt: Point;
   event: T;
 };
 
@@ -17,21 +11,26 @@ export type CanvasEvent<T> = {
   providedIn: "root",
 })
 export class CanvasEventService {
-  public pointerDown$ = new Subject<CanvasPointerEvent>();
-  public pointerMove$ = new Subject<CanvasPointerEvent>();
+  public pointerDown$ = new Subject<CanvasEvent<PointerEvent>>();
+  public pointerUp$ = new Subject<CanvasEvent<PointerEvent>>();
+  public pointerMove$ = new Subject<CanvasEvent<PointerEvent>>();
   public wheel$ = new Subject<CanvasEvent<WheelEvent>>();
 
   constructor() {}
 
-  handlePointerDown(ev: CanvasPointerEvent) {
+  handlePointerDown(ev: CanvasEvent<PointerEvent>) {
     this.pointerDown$.next(ev);
   }
 
-  handlePointerMove(ev: CanvasPointerEvent) {
+  handlePointerUp(ev: CanvasEvent<PointerEvent>) {
+    this.pointerUp$.next(ev);
+  }
+
+  handlePointerMove(ev: CanvasEvent<PointerEvent>) {
     this.pointerMove$.next(ev);
   }
 
-  handleWheel(ev: { x: number; y: number; event: WheelEvent }) {
+  handleWheel(ev: CanvasEvent<WheelEvent>) {
     this.wheel$.next(ev);
   }
 }

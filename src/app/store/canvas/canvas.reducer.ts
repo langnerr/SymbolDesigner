@@ -3,6 +3,7 @@ import { initialState } from "./canvas.state";
 import * as Actions from "./canvas.actions";
 import { round } from "../../util";
 import { LineElement } from "../../models/element";
+import { dynamicElements } from "./canvas.selectors";
 
 export const canvasReducer = createReducer(
   initialState,
@@ -11,7 +12,7 @@ export const canvasReducer = createReducer(
     return { ...state, currentToolName: tool };
   }),
 
-  on(Actions.zooming, (state, { deltaY, ptX, ptY }) => {
+  on(Actions.zooming, (state, { deltaY, pt }) => {
     const MAX_DELTA = 10;
     let delta = Math.min(Math.abs(deltaY), MAX_DELTA);
     const sign = -Math.sign(deltaY);
@@ -23,8 +24,8 @@ export const canvasReducer = createReducer(
     // ptXY should stay on the same device-Coord
     // (ptX - oldViewX) * oldZoom ==  (ptX - newViewX) * newZoom
     //
-    const newX = ptX - (oldZoom / newZoom) * (ptX - state.viewportX);
-    const newY = ptY - (oldZoom / newZoom) * (ptY - state.viewportY);
+    const newX = pt.x - (oldZoom / newZoom) * (pt.x - state.viewportX);
+    const newY = pt.y - (oldZoom / newZoom) * (pt.y - state.viewportY);
     return {
       ...state,
       viewportZoom: round(newZoom),
@@ -48,6 +49,28 @@ export const canvasReducer = createReducer(
     viewportX: round(state.viewportX + deltaX / state.viewportZoom),
     viewportY: round(state.viewportY + deltaY / state.viewportZoom),
   })),
+
+  on(Actions.replaceDynamic, (state, { elements }) => {
+    const newDynamicElements = { ...state.dynamicElements };
+    for (let ele of elements) {
+      newDynamicElements[ele.id] = { ...ele };
+    }
+    return {
+      ...state,
+      dynamicElements: newDynamicElements,
+    };
+  }),
+
+  on(Actions.removeDynamic, (state, { ids }) => {
+    const newDynamicElements = { ...state.dynamicElements };
+    for (let id of ids) {
+      delete newDynamicElements[id];
+    }
+    return {
+      ...state,
+      dynamicElements: newDynamicElements,
+    };
+  }),
 
   on(Actions.createRandomLine, (state, { count }) => {
     const x0 = state.viewportX;

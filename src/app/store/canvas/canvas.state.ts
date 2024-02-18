@@ -1,10 +1,10 @@
 import {
-  Element,
   EllipseElement,
   IElement,
   LineElement,
   PathElement,
 } from "../../models/element";
+import { Point } from "../../point";
 
 export interface CanvasState {
   currentToolName: string;
@@ -16,6 +16,7 @@ export interface CanvasState {
   canvasWidth: number;
   canvasHeight: number;
   elements: IElement[];
+  dynamicElements: Record<string, IElement>;
   selectedIds: string[];
 }
 
@@ -40,4 +41,5 @@ export const initialState: CanvasState = {
   canvasHeight: 100,
   elements: initElements,
   selectedIds: [],
+  dynamicElements: {},
 };

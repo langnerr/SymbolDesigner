@@ -41,3 +41,17 @@
 
   }
 </ng-container>
+
+<ng-container *ngFor="let ele of getDynamicElements()">
+  @if(ele.type === 'selectionBox') {
+  <svg:rect
+    class="selection-box"
+    [id]="ele.id"
+    [attr.x]="ele.x1"
+    [attr.y]="ele.y1"
+    [attr.width]="$any(ele).w"
+    [attr.height]="$any(ele).h"
+  />
+
+  }
+</ng-container>

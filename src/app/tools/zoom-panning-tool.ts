@@ -29,8 +29,7 @@ export class ZoomPanningTool extends BaseTool implements OnInit {
           this.store.dispatch(
             CanvasActions.zooming({
               deltaY: ev.event.deltaY,
-              ptX: ev.x,
-              ptY: ev.y,
+              pt: ev.pt,
             })
           );
         } else {

@@ -32,6 +32,7 @@ export class MainEditorComponent {
   @ViewChild(CanvasComponent) canvas?: CanvasComponent;
 
   elements$ = this.store.select(Selectors.selectElements);
+  dynamicElements$ = this.store.select(Selectors.dynamicElements);
   showCommandLine$ = this.store.select(GuiSelectors.showCommandLine);
 
   canvasWidth$ = this.store.select(Selectors.canvasWidth);

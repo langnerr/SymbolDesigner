@@ -58,3 +58,8 @@ export const selectElements = createSelector(selectCanvas, (state) => {
     });
   }
 });
+
+export const dynamicElements = createSelector(
+  selectCanvas,
+  (state) => state.dynamicElements
+);

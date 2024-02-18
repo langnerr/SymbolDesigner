@@ -25,7 +25,7 @@ export class StatusComponent implements OnDestroy, OnInit {
     this.canvasEventService.pointerMove$
       .pipe(takeUntil(this.destroy$))
       .subscribe((ev) => {
-        this.status = `x:${ev.x.toFixed(4)} / y:${ev.y.toFixed(4)}`;
+        this.status = `x:${ev.pt.x.toFixed(4)} / y:${ev.pt.y.toFixed(4)}`;
       });
   }
 

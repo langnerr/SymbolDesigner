@@ -8,6 +8,7 @@
   [zoom]="(viewPortZoom$ | async) || 1"
   (onResize)="onResize($event)"
   [elements]="(elements$ | async) || []"
+  [dynamicElements]="(dynamicElements$ | async) || {}"
 ></svg>
 <app-status></app-status>
 
