@@ -1,0 +1,21 @@
+$ACTIVE_COLOR: #9cf7f7;
+
+.toolbar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  background-color: #f0f0f0;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.active {
+  background-color: $ACTIVE_COLOR;
+}
