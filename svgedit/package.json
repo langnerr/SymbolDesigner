@@ -20,6 +20,9 @@
     "xstate": "^5.11.0",
     "zustand": "^4.5.2"
   },
+  "overrides": {
+    "typescript": "^5.4.5"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
