@@ -67,7 +67,7 @@ const Editor: React.FC = () => {
         clientY: event.clientY,
       });
     } else {
-      // store.panningViewport({ deltaX: event.deltaX, deltaY: event.deltaY });
+      store.panningViewport({ deltaX: event.deltaX, deltaY: event.deltaY });
     }
     // setTranslate((prevTranslate) => {
     //   return {
@@ -166,7 +166,7 @@ const Editor: React.FC = () => {
               y={node.y - node.size / store.viewport.zoom}
               width={(node.size * 2) / store.viewport.zoom}
               height={(node.size * 2) / store.viewport.zoom}
-              stroke-width={1 / store.viewport.zoom}
+              strokeWidth={1 / store.viewport.zoom}
               stroke="black"
               fill={node.color}
             />
