@@ -132,11 +132,9 @@ const editorStore = createStore<EditorState>((set, get) => ({
       return {
         viewport: {
           ...state.viewport,
-          viewport: {
-            ...state.viewport,
-            x: round(state.viewport.x + deltaX / state.viewport.zoom),
-            y: round(state.viewport.y + deltaY / state.viewport.zoom),
-          },
+          ...state.viewport,
+          x: round(state.viewport.x + deltaX / state.viewport.zoom),
+          y: round(state.viewport.y + deltaY / state.viewport.zoom),
         },
       };
     });
