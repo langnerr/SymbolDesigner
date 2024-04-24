@@ -13,7 +13,12 @@ import {
 } from "./nodes";
 
 type ToolType = "SELECT" | "CREATE_LINE" | "CREATE_RECT";
-type StateType = "SELECT" | "WANT_DRAG_NODE" | "DRAG_NODE" | "WANT_DRAG_HANDLE";
+type StateType =
+  | "SELECT"
+  | "WANT_DRAG_NODE"
+  | "DRAG_NODE"
+  | "WANT_DRAG_HANDLE"
+  | "DRAG_HANDLE";
 
 interface ECMouseEvent {
   x: number;
@@ -31,6 +36,7 @@ type EditorState = {
   currentState: StateType;
   dragStart: { x: number; y: number; clientX: number; clientY: number };
   dragStartPosition: Vector;
+  dragHandle: HandleNode | undefined;
 
   canvas: {
     width: number;
@@ -80,6 +86,7 @@ const editorStore = createStore<EditorState>((set, get) => ({
   handleNodes: [],
   dragStart: { x: 0, y: 0, clientX: 0, clientY: 0 },
   dragStartPosition: new Vector(0, 0),
+  dragHandle: undefined,
 
   canvas: { width: 800, height: 600 },
   viewport: { x: 0, y: 0, width: 800, height: 600, zoom: 1 },
@@ -167,9 +174,14 @@ const editorStore = createStore<EditorState>((set, get) => ({
             // is it a handle?
             const handle = get().handleNodes.find((n) => n.id === id);
             if (handle) {
+              const startPos = handle
+                .getPosition()
+                .subtract(new Vector(event.x, event.y));
               set((state) => ({
                 currentState: "WANT_DRAG_HANDLE",
                 dragStart: { ...event },
+                dragHandle: handle,
+                dragStartPosition: startPos,
               }));
             }
           }
@@ -186,7 +198,7 @@ const editorStore = createStore<EditorState>((set, get) => ({
         case "WANT_DRAG_NODE":
           return { currentState: "SELECT" };
         case "WANT_DRAG_HANDLE":
-          return { currentState: "SELECT" };
+          return { currentState: "SELECT", dragHandle: undefined };
 
         case "DRAG_NODE":
           if (state.selectedNode) {
@@ -216,20 +228,41 @@ const editorStore = createStore<EditorState>((set, get) => ({
           }
         }
         break;
-      case "DRAG_NODE": {
-        const newPos = get().dragStartPosition.add(
-          new Vector(event.x, event.y)
-        );
-        const newNodes = get().nodes.map((node) => {
-          if (node.id === get().selectedNode?.id) {
-            node.setPosition(newPos);
+
+      case "DRAG_NODE":
+        {
+          const newPos = get().dragStartPosition.add(
+            new Vector(event.x, event.y)
+          );
+          const newNodes = get().nodes.map((node) => {
+            if (node.id === get().selectedNode?.id) {
+              node.setPosition(newPos);
+            }
+            return node;
+          });
+          set((state) => ({
+            nodes: newNodes,
+          }));
+        }
+        break;
+
+      case "WANT_DRAG_HANDLE":
+        {
+          // start only if the mouse has moved more than 5 pixels
+          const dx = event.clientX - get().dragStart.clientX;
+          const dy = event.clientY - get().dragStart.clientY;
+          if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+            set((state) => ({
+              currentState: "DRAG_HANDLE",
+            }));
           }
-          return node;
-        });
-        set((state) => ({
-          nodes: newNodes,
-        }));
-      }
+        }
+        break;
+
+      case "DRAG_HANDLE":
+        {
+        }
+        break;
     }
   },
 
